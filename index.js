@@ -11,9 +11,9 @@ const PORT = 8003;
 app.use(express.json())
 app.use(cors())
 
-app.get('/sight_seeeing', async(req, res) => {
+app.get('/get_sight_seeing', async(req, res) => {
     try{
-        const destination = req.body.destination || req.query.destination;
+        const destination = req.query.destination || req.body.destination; 
 
         if (!destination) {
             return res.status(400).json({ error: "Destination is required" });
@@ -54,10 +54,14 @@ app.get('/sight_seeeing', async(req, res) => {
             rating : tour.rating
         }));
 
+        const topResults = structuredResults
+        .sort ((a, b) => b.rating - a.rating)
+        .slice(0, 4);
+
         res.status(200).json({
             agent: 'Charlie',
             extractedInfo: destination,
-            sightSeeing: structuredResults
+            sightSeeing: topResults
         });
 
     } catch (error) {
@@ -72,8 +76,6 @@ app.get('/sight_seeeing', async(req, res) => {
         });
     }
 });
-
-
 
 app.listen(PORT, () =>{
     console.log(`The server is running on port ${PORT}`);

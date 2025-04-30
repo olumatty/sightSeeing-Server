@@ -11,6 +11,10 @@ const PORT = 8003;
 app.use(express.json())
 app.use(cors())
 
+app.get('/api/v1/health', (req, res) => {
+    res.status(200).json({ status: 'OK', server: 'Charlie', uptime: process.uptime() });
+  });
+
 app.get('/v1/get_sight_seeing', async(req, res) => {
     try{
         const destination = req.query.destination || req.body.destination; 
